@@ -1,4 +1,4 @@
-package com.example.extoj.dto;
+package com.example.exojt.dto;
 
 import lombok.Data;
 

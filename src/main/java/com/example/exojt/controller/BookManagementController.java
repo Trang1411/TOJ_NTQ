@@ -1,12 +1,11 @@
-package com.example.extoj.controller;
+package com.example.exojt.controller;
 
-import com.example.extoj.service.BookManagementService;
+import com.example.exojt.security.service.BookManagementService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 

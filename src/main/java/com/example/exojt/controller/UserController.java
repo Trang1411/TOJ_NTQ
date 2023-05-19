@@ -1,4 +1,4 @@
-package com.example.extoj.controller;
+package com.example.exojt.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
