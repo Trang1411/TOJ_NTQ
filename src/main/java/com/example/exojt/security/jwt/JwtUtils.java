@@ -1,39 +1,47 @@
 package com.example.exojt.security.jwt;
 
-import com.example.exojt.security.service.UserDetailsImpl;
+import com.example.exojt.models.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${designmycodes.app.jwtSecret}")
+    @Value("${jwt.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${designmycodes.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+    @Value("${jwt.jwtExpirationMs}")
+    private long jwtExpirationMs;
 
-    public String generateJwtToken(Authentication authentication) {
 
-        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-
+    public String generateJwtToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", user.getId());
+        claims.put("email", user.getEmail());
+        claims.put("role", user.getRole());
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
+                .setSubject((user.getId()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .setClaims(claims)
                 .compact();
     }
 
     public String getUserNameFromJwtToken(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public String getEmailFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 

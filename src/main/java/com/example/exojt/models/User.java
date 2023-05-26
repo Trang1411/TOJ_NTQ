@@ -33,10 +33,10 @@ public class User {
     @Size(max = 120)
     private String password;
 
-//    @DBRef
+    //    @DBRef
 //    private Set<Role> roles = new HashSet<>();
     @Field("role")
-    private Role role;
+    private String role;
 
     public User(String username, String email, String password) {
         this.username = username;

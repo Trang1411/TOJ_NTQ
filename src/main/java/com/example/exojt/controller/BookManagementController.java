@@ -1,6 +1,6 @@
 package com.example.exojt.controller;
 
-import com.example.exojt.security.service.BookManagementService;
+import com.example.exojt.service.BookManagementService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

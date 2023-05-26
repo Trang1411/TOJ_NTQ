@@ -1,4 +1,4 @@
-package com.example.exojt.security.service;
+package com.example.exojt.service;
 
 public interface BookManagementService {
 

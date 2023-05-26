@@ -1,62 +1,44 @@
 package com.example.exojt.controller;
 
+import com.example.exojt.models.User;
 import com.example.exojt.payload.request.LoginRequest;
 import com.example.exojt.payload.response.JwtResponse;
-import com.example.exojt.repository.RoleRepository;
-import com.example.exojt.repository.UserRepository;
 import com.example.exojt.security.jwt.JwtUtils;
-import com.example.exojt.security.service.UserDetailsImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.exojt.service.base.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 //@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
+@AllArgsConstructor
 public class AuthController {
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
+    final UserService userService;
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder encoder;
-
-    @Autowired
-    JwtUtils jwtUtils;
-
-    @PostMapping("/lognin")
+    @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
+        User user = userService.findByEmail(loginRequest.getEmail(), loginRequest.getPassword());
+        String token = jwtUtils.generateJwtToken(user);
+        JwtResponse jwtResponse = JwtResponse.builder()
+                .token(token)
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .build();
+        return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
     }
+
+//    @GetMapping("/logout")
+//    public ResponseEntity logout(HttpServletRequest httpServletRequest){
+//
+//    }
 }

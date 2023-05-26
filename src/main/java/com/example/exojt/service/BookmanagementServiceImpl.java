@@ -1,4 +1,4 @@
-package com.example.exojt.security.service;
+package com.example.exojt.service;
 
 import com.example.exojt.repository.BookManagementRepository;
 import lombok.AllArgsConstructor;
