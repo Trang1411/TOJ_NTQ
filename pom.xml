@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>exTOJ</artifactId>
+	<artifactId>exOJT</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>exTOJ</name>
-	<description>exTOJ</description>
+	<name>exOJT</name>
+	<description>exOJT</description>
 	<properties>
 		<java.version>8</java.version>
 	</properties>
@@ -50,6 +50,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>

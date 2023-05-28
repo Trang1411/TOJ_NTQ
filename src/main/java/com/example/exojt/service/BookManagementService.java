@@ -1,5 +1,4 @@
-package com.example.extoj.service;
-
+package com.example.exojt.service;
 
 public interface BookManagementService {
 

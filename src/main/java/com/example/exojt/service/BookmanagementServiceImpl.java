@@ -1,12 +1,12 @@
-package com.example.extoj.service;
+package com.example.exojt.service;
 
-import com.example.extoj.repository.BookManagementRepository;
+import com.example.exojt.repository.BookManagementRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class BookmanagementServiceImpl implements BookManagementService{
+public class BookmanagementServiceImpl implements BookManagementService {
     private final BookManagementRepository bookManagementRepository;
 
 

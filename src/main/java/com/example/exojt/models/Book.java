@@ -1,4 +1,4 @@
-package com.example.extoj.entity;
+package com.example.exojt.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

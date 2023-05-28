@@ -1,19 +1,16 @@
-package com.example.extoj.controller;
+package com.example.exojt.controller;
 
-import com.example.extoj.service.BookManagementService;
+import com.example.exojt.service.BookManagementService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("api/v1/bookManagement")
 @AllArgsConstructor
-@Configuration
 @PropertySource("application.properties")
 public class BookManagementController {
     final private BookManagementService bookManagementService;
