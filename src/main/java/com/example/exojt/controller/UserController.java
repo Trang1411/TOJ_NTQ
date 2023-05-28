@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 //    private final UserService userService;
+    // day la code ngay 28
+public static void main(String[] args) {
+    System.out.println("day 28");
+}
 
 
 
