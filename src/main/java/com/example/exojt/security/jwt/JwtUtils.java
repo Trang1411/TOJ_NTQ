@@ -1,5 +1,6 @@
 package com.example.exojt.security.jwt;
 
+import com.example.exojt.models.TokenSession;
 import com.example.exojt.models.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
@@ -7,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,12 +39,35 @@ public class JwtUtils {
                 .compact();
     }
 
-    public String getUserNameFromJwtToken(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+    public TokenSession parseToken(String token) {
+        TokenSession session = new TokenSession();
+        try {
+            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            Claims claimsData = claimsJws.getBody();
+            session.setRole(claimsData.get("role", String.class));
+            session.setEmail(claimsData.get("email", String.class));
+            session.setUserId(claimsData.get("userId", String.class));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return session;
     }
 
     public String getEmailFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public String getRoleFromJwtToken(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public String getTokenJwtFromRequest(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+        return null;
     }
 
     public boolean validateJwtToken(String authToken) {

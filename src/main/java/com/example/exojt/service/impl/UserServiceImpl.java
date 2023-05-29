@@ -7,6 +7,7 @@ import com.example.exojt.service.base.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,6 +40,31 @@ public class UserServiceImpl implements UserService {
             return user;
         }
         System.out.println("============= INVALID PASSWORD OR EMAIL ==========");
-        throw new RuntimeException("User not found !");
+        throw new RuntimeException("USER NOT FOUND !");
     }
+
+    @Override
+    public User createAdmin(User user) {
+        Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
+        if (optionalUser.isPresent()) {
+            throw new RuntimeException("ACCOUNT EXISTS");
+        }
+        return userRepository.save(user);
+    }
+
+    @Override
+    public List<User> findAllAdmin() {
+        List<User> users = userRepository.findByRole("ADMIN");
+        return users;
+    }
+
+    @Override
+    public void deleteById(String userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (!optionalUser.isPresent()) {
+            throw new RuntimeException("USER NOT FOUND !");
+        }
+        userRepository.deleteById(userId);
+    }
+
 }
