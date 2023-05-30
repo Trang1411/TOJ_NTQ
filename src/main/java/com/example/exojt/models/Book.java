@@ -17,7 +17,8 @@ public class Book {
     public static final String BOOK_NAME = "book_name";
     public static final String AUTHOR = "author";
     public static final String PUBLICATION_DATE = "publication_date";
-    public static final long PRICE = Long.parseLong("price");
+    public static final String PRICE = "price";
+
     @Id
     private String id;
     @Field(BOOK_NAME)
@@ -26,6 +27,6 @@ public class Book {
     private String authorName;
     @Field(PUBLICATION_DATE)
     private long publicationDate;
-    @Field("price")
+    @Field(PRICE)
     private long price;
 }

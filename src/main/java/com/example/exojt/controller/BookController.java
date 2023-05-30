@@ -21,14 +21,15 @@ public class BookController {
 
     @GetMapping("/search")
     public ResponseEntity<List> searchBook(@RequestHeader("Authorization") String token,
-                                           @RequestParam(value = "keySearch", required = false) String keySearch,
+                                           @RequestParam(value = "keySearch", required = false, defaultValue = "") String keySearch,
+                                           @RequestParam(value = "conditionSort", defaultValue = "PRICE") String conditionSort,
                                            @RequestParam(value = "page")int page, @RequestParam(value = "size") int size){
         TokenSession session = jwtUtils.parseToken(token);
         if (session.getRole().equals("USER") || session.getRole().equals("ROOT")){
             throw new RuntimeException("UnAuthorization !");
         }
 
-        List<Book> books = bookService.findByIdOrBookName(keySearch, page, size);
+        List<Book> books = bookService.findByIdOrBookName(keySearch, conditionSort, page, size);
         return  ResponseEntity.status(HttpStatus.OK).body(books);
     }
 

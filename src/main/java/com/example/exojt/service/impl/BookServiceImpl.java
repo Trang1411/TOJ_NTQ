@@ -14,8 +14,8 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     @Override
-    public List<Book> findByIdOrBookName(String keySearch, int page, int size) {
-        bookRepository.findByIdOrBookName(keySearch, page, size);
-        return null;
+    public List<Book> findByIdOrBookName(String keySearch, String conditionSort, int page, int size) {
+        List<Book> books = bookRepository.findByIdOrBookName(keySearch, conditionSort, page, size);
+        return books;
     }
 }
