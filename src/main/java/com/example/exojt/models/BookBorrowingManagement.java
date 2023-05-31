@@ -1,11 +1,15 @@
 package com.example.exojt.models;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
 
 @Data
 @NoArgsConstructor
@@ -20,6 +24,7 @@ public class BookBorrowingManagement {
     public static final String START_TIME = "start_time";
     public static final String END_TIME = "end_time";
     public static final String DURATION = "duration";
+    public static final String STATUS = "status";
 
     @Id
     private String id;
@@ -36,5 +41,8 @@ public class BookBorrowingManagement {
     @Field(END_TIME)
     private long endTime;
     @Field(DURATION)
+    @Max(10)
     private long duration;
+    @Field(STATUS)
+    private String status;
 }

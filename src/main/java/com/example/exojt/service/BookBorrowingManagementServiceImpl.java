@@ -20,15 +20,15 @@ public class BookBorrowingManagementServiceImpl implements BookBorrowingManageme
     @Override
     public BookBorrowingManagement findById(String id) {
         Optional<BookBorrowingManagement> optional = bookBorrowingManagementRepository.findById(id);
-        if (!optional.isPresent()){
+        if (!optional.isPresent()) {
             throw new RuntimeException("NOT FOUND !");
         }
-//        long startTime = optional.get().getStartTime();
-//        long endTime = optional.get().getEndTime();
-//        if (endTime == 0){
-//            long now = startTime + 5*60*100; ?????
-//        }
-//        optional.get().setDuration();
+        long now = System.currentTimeMillis();
+        long startTime = optional.get().getStartTime();
+        long max = 10 * 5 * 60 * 1000;
+        long duration = now - startTime;
+        optional.get().setDuration(duration);
+        optional.get().setEndTime(startTime+max);
         BookBorrowingManagement bookBorrowingManagement = optional.get();
         return bookBorrowingManagement;
     }
