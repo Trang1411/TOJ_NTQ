@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 
 @Aspect
 @Component
@@ -27,7 +29,28 @@ public class AuthorizationChecker {
             return;
         }
         System.out.println("======== 1111111111 =====================");
-        Method roles = annotation.getClass().getMethod("roles", String.class);
+        Method[] methods = annotation.getClass().getDeclaredMethods();
+        Method roles = null;
+        for (Method x : methods) {
+            if (x.getName().equals("roles")) {
+                roles = x;
+                break;
+            }
+        }
+        if (roles == null) {
+            return;
+        }
 
+        try {
+            String[] values = (String[]) roles.invoke(annotation, (String[]) new String[]{});
+            for (String s : values) {
+                System.out.println("===== 222 =========== " + s);
+
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
