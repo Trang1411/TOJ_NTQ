@@ -1,5 +1,6 @@
 package com.example.exojt.controller;
 
+import com.example.MappingCustom.AuthorizationAPI;
 import com.example.exojt.models.BookBorrowingManagement;
 import com.example.exojt.models.TokenSession;
 import com.example.exojt.payload.request.BookBorrowingManagementRequest;
@@ -52,6 +53,7 @@ public class BookBorrowingManagementController {
     }
 
     @GetMapping("/searchUser")
+    @AuthorizationAPI
     public ResponseEntity<List> searchUser(@RequestHeader("Authorization") String token,
                                            @RequestParam(value = "keySearch", required = false) String keySearch,
                                            @RequestParam(value = "condition", defaultValue = "BOOK_NAME") String condition,
