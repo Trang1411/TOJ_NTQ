@@ -1,5 +1,6 @@
 package com.example.exojt.controller;
 
+import com.example.MappingCustom.AuthorizationAPI;
 import com.example.exojt.models.ERole;
 import com.example.exojt.models.Password;
 import com.example.exojt.models.TokenSession;
@@ -27,11 +28,8 @@ public class UserController {
     private final JwtUtils jwtUtils;
 
     @PostMapping("/createAdmin")
-    public ResponseEntity<User> createAdmin(@RequestHeader("Authorization") String token, @RequestParam(value = "email") String email) {
-        TokenSession session = jwtUtils.parseToken(token);
-        if (session.getRole().equals("USER") || session.getRole().equals("ADMIN")){
-            throw new RuntimeException("UnAuthorization !");
-        }
+    @AuthorizationAPI(roles = {"ROOT"})
+    public ResponseEntity<User> createAdmin(@RequestParam(value = "email") String email) {
         User user = new User();
         user.setEmail(email);
         user.setPassword(Password.generateRandomPassword());
@@ -41,21 +39,15 @@ public class UserController {
     }
 
     @GetMapping("/getAllAdmin")
-    public ResponseEntity<List> getAllAdmin(@RequestHeader("Authorization") String token) {
-        TokenSession session = jwtUtils.parseToken(token);
-        if (session.getRole().equals("USER") || session.getRole().equals("ADMIN")) {
-            throw new RuntimeException("UnAuthorization !");
-        }
+    @AuthorizationAPI(roles = {"ROOT"})
+    public ResponseEntity<List> getAllAdmin() {
         List<User> userList = userService.findAllAdmin();
         return ResponseEntity.status(HttpStatus.OK).body(userList);
     }
 
     @DeleteMapping("/deleteAdmin")
-    public ResponseEntity<User> deleteAdmin(@RequestHeader("Authorization") String token, @RequestParam(value = "userId") String userId){
-        TokenSession session = jwtUtils.parseToken(token);
-        if (session.getRole().equals("USER") || session.getRole().equals("ADMIN")){
-            throw new RuntimeException("UnAuthorization !");
-        }
+    @AuthorizationAPI(roles = {"ROOT"})
+    public ResponseEntity<User> deleteAdmin(@RequestParam(value = "userId") String userId){
         userService.deleteById(userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

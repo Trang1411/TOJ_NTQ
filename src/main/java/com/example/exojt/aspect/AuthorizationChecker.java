@@ -1,22 +1,28 @@
 package com.example.exojt.aspect;
 
 import com.example.MappingCustom.AuthorizationAPI;
+import com.example.exojt.models.TokenSession;
+import com.example.exojt.payload.response.UserContext;
+import com.example.exojt.security.jwt.JwtUtils;
+import lombok.AllArgsConstructor;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 
 @Aspect
 @Component
+@AllArgsConstructor
 public class AuthorizationChecker {
+    private final JwtUtils jwtUtils;
 
     @Before("execution(* com.example.exojt.controller.*.*(..))")
     public void checkAuthorization(JoinPoint joinPoint) throws NoSuchMethodException {
@@ -25,26 +31,40 @@ public class AuthorizationChecker {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
         Annotation annotation = method.getAnnotation(AuthorizationAPI.class);
+
         if (annotation == null) {
             return;
         }
-        System.out.println("======== 1111111111 =====================");
         Method[] methods = annotation.getClass().getDeclaredMethods();
+
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (servletRequestAttributes == null) {
+            throw new RuntimeException("--------null-------");
+        }
+        HttpServletRequest request = servletRequestAttributes.getRequest();
+        String token = request.getHeader("Authorization");
+        TokenSession tokenSession = jwtUtils.parseToken(token);
+
+        //Set User context
+        UserContext.setUserContext(tokenSession);
+
         Method roles = null;
-        for (Method x : methods) {
-            if (x.getName().equals("roles")) {
-                roles = x;
+        for (Method role : methods) {
+            if (role.getName().equals("roles")) {
+                roles = role;
                 break;
             }
         }
         if (roles == null) {
-            return;
+            throw new RuntimeException("PERMISSION DENIED !");
         }
 
         try {
             String[] values = (String[]) roles.invoke(annotation, (String[]) new String[]{});
             for (String s : values) {
-                System.out.println("===== 222 =========== " + s);
+                if (s.equals(tokenSession.getRole())) {
+                    return;
+                }
 
             }
         } catch (IllegalAccessException e) {

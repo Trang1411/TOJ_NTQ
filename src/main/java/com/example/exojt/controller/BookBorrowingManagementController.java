@@ -30,11 +30,8 @@ public class BookBorrowingManagementController {
     private final ModelMapper mapper;
 
     @PutMapping("/update")
-    public ResponseEntity<BookBorrowingManagementResponse> update(@RequestHeader("Authorization") String token, @RequestBody() BookBorrowingManagementRequest request) {
-        TokenSession session = jwtUtils.parseToken(token);
-        if (session.getRole().equals("USER")) {
-            throw new RuntimeException("UnAuthorization !");
-        }
+    @AuthorizationAPI(roles = {"ROOT", "ADMIN"})
+    public ResponseEntity<BookBorrowingManagementResponse> update(@RequestBody() BookBorrowingManagementRequest request) {
         if (request == null) {
             throw new RuntimeException("REQUEST NULL !");
         }
@@ -53,16 +50,12 @@ public class BookBorrowingManagementController {
     }
 
     @GetMapping("/searchUser")
-    @AuthorizationAPI
-    public ResponseEntity<List> searchUser(@RequestHeader("Authorization") String token,
-                                           @RequestParam(value = "keySearch", required = false) String keySearch,
+    @AuthorizationAPI(roles = {"ROOT", "ADMIN"})
+    public ResponseEntity<List> searchUser(@RequestParam(value = "keySearch", required = false) String keySearch,
                                            @RequestParam(value = "condition", defaultValue = "BOOK_NAME") String condition,
                                            @RequestParam(value = "page") int page,
                                            @RequestParam(value = "size") int size){
-        TokenSession session = jwtUtils.parseToken(token);
-        if (session.getRole().equals("USER")){
-            throw new RuntimeException("UnAuthorization !");
-        }
+
         List<BookBorrowingManagement> bookBorrowingManagements = bookBorrowingManagementService.findByUserIdOrUserName(keySearch, condition, page, size);
         List<BookBorrowingManagementResponse> responses = bookBorrowingManagements.stream()
                         .map(response -> mapper.map(response, BookBorrowingManagementResponse.class))

@@ -18,13 +18,6 @@ public class LoggingAspect {
 
     @Around("execution(* com.example.exojt.controller.*.*(..))")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-//        if (log.isDebugEnabled()) {
-//            log.info("Enter: {}.{}() with argument[s] = {}",
-//                    joinPoint.getSignature().getDeclaringTypeName(),
-//                    joinPoint.getSignature().getName(),
-//                    Arrays.toString(joinPoint.getArgs()),
-//                    joinPoint.getSignature().getModifiers());
-//        }
         try {
             ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             if (servletRequestAttributes == null) {
@@ -36,7 +29,6 @@ public class LoggingAspect {
             Object result = joinPoint.proceed();
             long processTime = System.currentTimeMillis() - startTime;
 
-            log.info("================");
             log.info("Exit: getDeclaringTypeName = {} \n" +
                             "api name = {}.\n" +
                             "method = {} \n" +
