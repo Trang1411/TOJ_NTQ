@@ -61,16 +61,22 @@ public class AuthorizationChecker {
 
         try {
             String[] values = (String[]) roles.invoke(annotation, (String[]) new String[]{});
+            boolean checkRole = false;
             for (String s : values) {
                 if (s.equals(tokenSession.getRole())) {
-                    return;
+                    checkRole = true;
+                    break;
                 }
-
             }
+            if (!checkRole){
+                throw new RuntimeException("PERMISSION DENIED !");
+            }
+
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
             throw new RuntimeException(e);
         }
+
     }
 }
