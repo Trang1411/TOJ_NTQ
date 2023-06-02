@@ -13,7 +13,7 @@ import java.util.List;
 public class Notification {
     private final BookBorrowingManagementRepository bookBorrowingManagementRepository;
 
-    @Scheduled(fixedRate = 1000*60*5)
+    @Scheduled(initialDelay = 1000*60*5, fixedRate = 1000*60*10)
     public void run() {
         System.out.println("============== RUNNING ===============");
         long now = System.currentTimeMillis();
@@ -21,7 +21,7 @@ public class Notification {
         for (BookBorrowingManagement list : borrowingManagementList) {
             long duration = now - list.getStartTime();
             list.setDuration(duration);
-            long max = 10*5*60*1000; //(ms)
+            long max = 10*5*60*1000; //(đơn vị ms)
             if (duration > max) {
                 System.out.printf("User có ID %d, tên %s, sách %s, Đã hết thời lượng mượn.", list.getUserId(), list.getUserName(), list.getBookName());
                 list.setStatus("EXPIRES");
