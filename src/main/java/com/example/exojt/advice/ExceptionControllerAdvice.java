@@ -11,6 +11,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleException(Exception exception) {
         System.out.println("=========== USER SENT A BAD REQUEST ==================");
+        exception.printStackTrace();
         return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
     }
 }
